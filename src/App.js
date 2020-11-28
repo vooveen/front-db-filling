@@ -60,14 +60,17 @@ import Grid from '@material-ui/core/Grid';
      synthese:'',
      enonce:'',
      comment:'',
-     propositions:Array(propNumber).fill({
+     propositions:Array.from({ length: 5 }, () => ({
       proposition:'',
       solution:false
-     }) 
+     }))
    })
    return (
    <>
-   <p>{JSON.stringify(unchangedValue)}</p>
+   <br />
+   <br />
+           <Grid container spacing={2}>
+           <Grid item xs={10}>
    <Timhilti
           
           label="Nombre de Proposition"
@@ -77,8 +80,9 @@ import Grid from '@material-ui/core/Grid';
           }}
          // value={propNumber}
           variant="outlined"
+          fullWidth
           onKeyDown={(e)=>{
-
+           
             if(e.keyCode === 13) {
               setPropNumber(e.target.value);
               
@@ -93,15 +97,32 @@ import Grid from '@material-ui/core/Grid';
             }
           }}
           //onChange={(e)=>}
-        />
-        <p>{propNumber}</p>
+        /></Grid>
+          <Grid item xs={2}>
+        <p>Nombre de Proposition:{propNumber}</p>
+        </Grid>
+        </Grid>
      <Formik
      enableReinitialize
        initialValues={unchangedValue}
+       validate={values => {
+       SetUnchangedValue({
+         ...unchangedValue,
+         module:values.module,
+         cours:values.cours,
+         synthese:values.synthese
+       })
+      }}
        onSubmit={(values, { setSubmitting, setValues}) => {
      
            setSubmitting(false);
-           alert(JSON.stringify(values, null, 2));
+           let c;
+           if(values.propositions.length === 1) c=1
+           else 
+           c=values.propositions.reduce((acc,cur)=> +acc.solution  + +cur.solution
+           )
+           const source ={...values,type_question:c >1 ?'QCM':'QCS'}
+           alert(JSON.stringify(source, null, 2));
            const payload = {...values, enonce: '', comment:'',propositions:  Array.from({ length: 5}, () => ({
             proposition:'',
             solution:false
@@ -126,6 +147,8 @@ import Grid from '@material-ui/core/Grid';
           { modules.map(e=>
             <MenuItem value={e}>{e}</MenuItem>)}
             </Field>
+            <br />
+            <br />
            <Field
              component={TextField}
              name="cours"
@@ -159,7 +182,8 @@ import Grid from '@material-ui/core/Grid';
              fullWidth
              variant="outlined"
            />
-           <br />
+             <br />
+            <br />
            <Field
              component={TextField}
              multiline
@@ -170,7 +194,9 @@ import Grid from '@material-ui/core/Grid';
              fullWidth
              variant="outlined"
            />
-           
+             <br />
+            <br />
+            <p>Proposition:</p>
            <Grid container spacing={2}>
                  {
                    values.propositions.map((value, index) => (
@@ -205,6 +231,7 @@ import Grid from '@material-ui/core/Grid';
              color="primary"
              disabled={isSubmitting}
              onClick={submitForm}
+             fullWidth
            >
              Submit
            </Button>
