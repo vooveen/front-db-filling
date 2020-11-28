@@ -75,27 +75,26 @@ import Grid from '@material-ui/core/Grid';
           
           label="Nombre de Proposition"
           type="number"
+          
           InputLabelProps={{
             shrink: true,
+          
           }}
-         // value={propNumber}
+          value={propNumber}
           variant="outlined"
           fullWidth
-          onKeyDown={(e)=>{
-           
-            if(e.keyCode === 13) {
-              setPropNumber(e.target.value);
-              
-              SetUnchangedValue({
-                ...unchangedValue,
-               
-                propositions:  Array.from({ length: e.target.value }, () => ({
-                  proposition:'',
-                  solution:false
-                 }))
-              })
-            }
+          onChange={(e)=>{
+            setPropNumber(e.target.value);
+            SetUnchangedValue({
+              ...unchangedValue,
+             
+              propositions:  Array.from({ length: e.target.value }, () => ({
+                proposition:'',
+                solution:false
+               }))
+            })
           }}
+        
           //onChange={(e)=>}
         /></Grid>
           <Grid item xs={2}>
@@ -116,14 +115,10 @@ import Grid from '@material-ui/core/Grid';
        onSubmit={(values, { setSubmitting, setValues}) => {
      
            setSubmitting(false);
-           let c;
-           if(values.propositions.length === 1) c=1
-           else 
-           c=values.propositions.reduce((acc,cur)=> +acc.solution  + +cur.solution
-           )
+           let c=values.propositions.reduce((a, {solution}) => +a + +solution, 0);
            const source ={...values,type_question:c >1 ?'QCM':'QCS'}
            alert(JSON.stringify(source, null, 2));
-           const payload = {...values, enonce: '', comment:'',propositions:  Array.from({ length: 5}, () => ({
+           const payload = {...values, enonce: '', comment:'',propositions:  Array.from({ length: propNumber}, () => ({
             proposition:'',
             solution:false
            }))} 
