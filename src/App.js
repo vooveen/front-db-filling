@@ -5,7 +5,19 @@ import { TextField, Select , Switch} from 'formik-material-ui';
 import {TextField as Timhilti}  from '@material-ui/core';
 import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
 
+const useStyles = makeStyles({
+  root: {
+  //backgroundColor:'gray',
+  marginInlineStart:50,
+  marginInlineEnd:50,
+  
+
+
+
+  },
+});
 
  const modules =[
 "Anatomie",
@@ -53,6 +65,7 @@ import Grid from '@material-ui/core/Grid';
 
  
  function App() {
+  const classes = useStyles();
    const [propNumber,setPropNumber]= React.useState(5);
    const [unchangedValue,SetUnchangedValue] = React.useState({
      module:'Anatomie',
@@ -66,7 +79,7 @@ import Grid from '@material-ui/core/Grid';
      }))
    })
    return (
-   <>
+   <div className={classes.root}>
    <br />
    <br />
            <Grid container spacing={2}>
@@ -234,7 +247,7 @@ import Grid from '@material-ui/core/Grid';
          </Form>
        )}
      </Formik>
-     </>
+     </div>
    );
  }
 
