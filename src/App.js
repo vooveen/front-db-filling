@@ -69,8 +69,10 @@ const useStyles = makeStyles({
    const [propNumber,setPropNumber]= React.useState(5);
    const [unchangedValue,SetUnchangedValue] = React.useState({
      module:'Anatomie',
-     cours:'',
-     synthese:'',
+     cours:{
+      cours:'',
+      synthese:''
+     },
      enonce:'',
      comment:'',
      propositions:Array.from({ length: 5 }, () => ({
@@ -117,17 +119,29 @@ const useStyles = makeStyles({
        SetUnchangedValue({
          ...unchangedValue,
          module:values.module,
-         cours:values.cours,
-         synthese:values.synthese
+         cours:{
+           ...unchangedValue.cours,
+           cours:  values.cours.cours,
+           synthese:values.cours.synthese
+         }
        })
       }}
-       onSubmit={(values, { setSubmitting, setValues}) => {
+       onSubmit={async (values, { setSubmitting, setValues}) => {
      
-           setSubmitting(false);
+           
            let c=values.propositions.reduce((a, {solution}) => +a + +solution, 0);
-           const source ={...values,type_question:c >1 ?'QCM':'QCS'}
-           console.log(source.propositions);
-           alert(JSON.stringify(source, null, 2));
+           const source ={...values,source:'Série 200',type_question:c >1 ?'QCM':'QCS'}
+           const url = `http://localhost:3006/qcm/add`;
+           const responce = await fetch(url, {
+             method: 'POST',
+             headers: {
+               Accept: 'application/json',
+               'Content-Type': 'application/json',
+             },
+             body: JSON.stringify(source),
+           });
+           console.log(responce)
+           setSubmitting(false);
            const payload = {...values, enonce: '', comment:'',propositions:  Array.from({ length: propNumber}, () => ({
             proposition:'',
             solution:false
@@ -156,7 +170,7 @@ const useStyles = makeStyles({
             <br />
            <Field
              component={TextField}
-             name="cours"
+             name="cours.cours"
              type="cours"
              label="Cours"
              fullWidth
@@ -168,7 +182,7 @@ const useStyles = makeStyles({
              component={TextField}
              multiline
              rowsMax={10}
-             name="synthese"
+             name="cours.synthese"
              type="synthese"
              label="Synthese"
              fullWidth
