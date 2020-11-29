@@ -82,8 +82,6 @@ const useStyles = makeStyles({
    <div className={classes.root}>
    <br />
    <br />
-           <Grid container spacing={2}>
-           <Grid item xs={10}>
    <Timhilti
           
           label="Nombre de Proposition"
@@ -109,11 +107,9 @@ const useStyles = makeStyles({
           }}
         
           //onChange={(e)=>}
-        /></Grid>
-          <Grid item xs={2}>
-        <p>Nombre de Proposition:{propNumber}</p>
-        </Grid>
-        </Grid>
+        />
+        <br />
+   <br />
      <Formik
      enableReinitialize
        initialValues={unchangedValue}
@@ -130,6 +126,7 @@ const useStyles = makeStyles({
            setSubmitting(false);
            let c=values.propositions.reduce((a, {solution}) => +a + +solution, 0);
            const source ={...values,type_question:c >1 ?'QCM':'QCS'}
+           console.log(source.propositions);
            alert(JSON.stringify(source, null, 2));
            const payload = {...values, enonce: '', comment:'',propositions:  Array.from({ length: propNumber}, () => ({
             proposition:'',
